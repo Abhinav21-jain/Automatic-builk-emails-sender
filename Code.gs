@@ -1,4 +1,6 @@
+
 // Created By Abhinav Jain 
+
 
 
 const RECIPIENT_COL  = "Recipient";
@@ -17,6 +19,7 @@ function onOpen() {
 }
 
 function sidebar() {
+
   var html = HtmlService.createHtmlOutputFromFile("join").setTitle("Mail Merge");
   var ui = SpreadsheetApp.getUi();
   SpreadsheetApp.getActiveSpreadsheet().toast("Wait a minute", "Waiting");
@@ -24,6 +27,17 @@ function sidebar() {
   ui.showSidebar(html);
   Template();
 }
+
+function visualeditor() {
+  var html = HtmlService.createHtmlOutputFromFile("visual").setWidth(800)
+      .setHeight(562);
+  var ui = SpreadsheetApp.getUi();
+  SpreadsheetApp.getActiveSpreadsheet().toast("Wait a minute", "Waiting");
+
+  SpreadsheetApp.getActiveSpreadsheet().toast("Almost done");
+  ui.showModalDialog(html, "Desgin the content for your email");
+}
+
 
 function createTemplate() {
   var spreadsheet = SpreadsheetApp.getActive();
@@ -172,7 +186,9 @@ function getTrackingGIF() {
   Logger.log(email,subject);
   // Create a url based on the Email Tracker Webhook web app's URL and attaching two URL paramaters 
   // that will pass the Subject and the To line of the email to the web app. Replace [WEBAPP URL] below with the URL of your web app
-  var imgURL = "https://script.google.com/macros/s/AKfycbxpAxLtsIhtBuJqbvhTDWe02N3AQNmApCa0gaz40Qo0k-rBtjbY/exec"
+
+//  var imgURL = "https://script.google.com/macros/s/AKfycbxpAxLtsIhtBuJqbvhTDWe02N3AQNmApCa0gaz40Qo0k-rBtjbY/exec"
+  var imgURL = "https://script.google.com/macros/s/AKfycbwQtPFF4Q8tkNkHDhN11O-IjTenlETHvmO8RyhA8Q/exec"
     // encode the Subject to assure that it will be passed properly as a part of a URL 
     + "?esubject=" + encodeURIComponent(subject.replace(/'/g, ""))
     // encode the To line to assure that it will be passed properly as a part of a URL
@@ -284,16 +300,16 @@ function sendEmails(subjectLine, sheet=SpreadsheetApp.getActiveSheet()) {
             // Link image to html body
             const body = getTrackingGIF();
             Logger.log(msgObj);
-//        GmailApp.sendEmail(row[RECIPIENT_COL], msgObj.subject, msgObj.text, {
-//          htmlBody: msgObj.html + body,
-//          // bcc: 'a.bbc@email.com',
-//          // cc: 'a.cc@email.com',
-//          // from: 'an.alias@email.com',
-//          // name: 'name of the sender',
-//          // replyTo: 'a.reply@email.com',
-//          // noReply: true, // if the email should be sent from a generic no-reply email address (not available to gmail.com users)
-//          attachments: emailTemplate.attachments
-//        });
+        GmailApp.sendEmail(row[RECIPIENT_COL], msgObj.subject, msgObj.text, {
+          htmlBody: msgObj.html + body,
+          // bcc: 'a.bbc@email.com',
+          // cc: 'a.cc@email.com',
+          // from: 'an.alias@email.com',
+          // name: 'name of the sender',
+          // replyTo: 'a.reply@email.com',
+          // noReply: true, // if the email should be sent from a generic no-reply email address (not available to gmail.com users)
+          attachments: emailTemplate.attachments
+        });
         // modify cell to record email sent date
             SpreadsheetApp.getActiveSpreadsheet().toast("Sending mail");
             out.push([new Date()]);
