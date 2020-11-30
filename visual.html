@@ -2394,7 +2394,7 @@
                 return;
             }
             var data = {
-                emailBody: quill.root.innerHTML,
+                emailBody: convertHtmlToPlain(quill.root.innerHTML),
                 emailSubject: document.getElementById('emailSubject').value,
             };
             if (data.emailSubject.trim() === '') {
@@ -2402,7 +2402,12 @@
                 return;
             }
             startWait();
-            google.script.run.withSuccessHandler(configurationSaved).saveEmailTemplate(data);
+            google.script.run.withSuccessHandler().saveEmailTemplate(data);
+        }
+        function convertHtmlToPlain(html){
+          var temp = document.createElement("div");
+          temp.innerHTML = html;
+        return temp.textContent || temp.innerText || "";
         }
 
         function configurationSaved(e) {

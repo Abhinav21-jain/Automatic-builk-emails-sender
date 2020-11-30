@@ -202,20 +202,18 @@ function getDraft(subjectLine, sheet=SpreadsheetApp.getActiveSheet()) {
 //  var ui = DocumentApp.getUi();
   SpreadsheetApp.getActiveSpreadsheet().toast("Wait a minute", "Waiting");
   if (!subjectLine){
-    subjectLine = Browser.inputBox("Mail Merge", 
-                                      "Enter subject line of the Gmail " +
-                                      "draft message you would like to mail merge with:",
-                                      Browser.Buttons.OK_CANCEL);
-//    var html = HtmlService.createHtmlOutputFromFile('draft');
-//    SpreadsheetApp.getUi() 
-//       .showModalDialog(html, 'Dialog title');
-
-    if (subjectLine === "cancel" || subjectLine == ""){
-    // if no subject line finish up
-      return; }
+//    subjectLine = Browser.inputBox("Mail Merge", 
+//                                      "Enter subject line of the Gmail " +
+//                                      "draft message you would like to mail merge with:",
+//                                      Browser.Buttons.OK_CANCEL);
+    subjectLine = gmaildraft();
+    
+//    if (subjectLine === "cancel" || subjectLine == ""){
+//    // if no subject line finish up
+//      return; }
   }
-  PropertiesService.getScriptProperties().setProperty('subject', subjectLine);
-  return;
+//  PropertiesService.getScriptProperties().setProperty('subject', subjectLine);
+//  return;
 }
  
 function sendEmails(subjectLine, sheet=SpreadsheetApp.getActiveSheet()) {
@@ -504,5 +502,30 @@ var options =
 var result = UrlFetchApp.fetch(url, options);
 SpreadsheetApp.getActiveSpreadsheet().toast("Almost Done");
 return result
+}
+
+
+function saveEmailTemplate(data) {
+
+  var forScope = GmailApp.getInboxUnreadCount(); // needed for auth scope
+ 
+  var raw = "dddddd";
+
+  var draftBody = Utilities.base64Encode(raw, Utilities.Charset.UTF_8).replace(/\//g,'_').replace(/\+/g,'-');
+
+  var params = {
+    method      : "post",
+    contentType : "application/json",
+    headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+    muteHttpExceptions:true,
+    payload:JSON.stringify({
+      "message": {
+        "raw": draftBody
+      }
+    })
+  };
+
+  var resp = UrlFetchApp.fetch("https://www.googleapis.com/gmail/v1/users/me/drafts", params);
+  Logger.log(resp.getContentText());
 }
 // Created By Abhinav Jain 
