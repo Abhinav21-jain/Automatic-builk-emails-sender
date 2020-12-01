@@ -139,10 +139,25 @@ function toastSend() {
 //}
 function startTimeTrigger() {
 // Schedule Daily
+  schedulerDialog();
+  const year = PropertiesService.getScriptProperties().getProperty('Schedular Year');
+  const month = PropertiesService.getScriptProperties().getProperty('Schedular Month');
+  const day = PropertiesService.getScriptProperties().getProperty('Schedular Day');
+  const hour = PropertiesService.getScriptProperties().getProperty('Schedular Hour');
+  const minute = PropertiesService.getScriptProperties().getProperty('Schedular Minute');
+  var triggerDay = new Date(year, month, day);
   ScriptApp.newTrigger("sendEmails")
-           .timeBased()
-           .everyDays(1)
-           .create();
+  .timeBased()
+  .at(triggerDay)
+  .atHour(hour)
+  .nearMinute(minute)
+  .create();
+  
+//  ScriptApp.newTrigger("sendEmails")
+//           .timeBased()
+//           .everyDays(1)
+//           .create();
+  
 //    ScriptApp.newTrigger("sendEmails")
 //     .timeBased()
 //     .everyMinutes(1)

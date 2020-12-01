@@ -28,7 +28,7 @@ function getAllDrafts() {
 }
 
 function submitDraftSubject(values){
-   var value = PropertiesService.getScriptProperties().getProperty('Draft Mail  ' + values)
+   var value = PropertiesService.getScriptProperties().getProperty('Draft Mail  ' + values);
    PropertiesService.getScriptProperties().setProperty('subject', value);
    
    Logger.log(value);
